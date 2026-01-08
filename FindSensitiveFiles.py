@@ -23,24 +23,49 @@ class bcolors:
     WHITE = '\033[37m'
     ORANGE = '\033[38;5;208m'
 
+os.system("color") # Comment out on Linux
+
 findings = []
 
 def outputFile(root, file, extension):
     filePath = os.path.join(root, file)
     filePathFinal = filePath.replace(file, f"{bcolors.FAIL}"+file+f"{bcolors.ENDC}").replace(extension, f"{bcolors.RED}"+extension+f"{bcolors.ENDC}")
     filePathFinal = filePathFinal.replace(directory, "").replace("\\","/")
-    print(f" 📄 {bcolors.RED}" + filePathFinal + f"{bcolors.ENDC}")
+    # print(f" 📄 {bcolors.RED}" + filePathFinal + f"{bcolors.ENDC}")
     # Check file contents for more specific findings.
     try:
         with open(filePath, "r", encoding="utf-8", errors="ignore") as f:
             lineCounter = 0
             for line in f:
-                # Certificates
+                # Certificates (this leads to a lot of junk detections, so I've commented it by default; uncomment it if you're looking for stray certificates lying around)
                 if "-----BEGIN CERTIFICATE-----" in line:
-                    findings.append(f"   ⚠️ {bcolors.FAIL}Certificate found ["+str(lineCounter)+f"]: {bcolors.ENDC}{bcolors.RED}"+filePath+f"{bcolors.ENDC}")
+                    # findings.append(f"   ⚠️ {bcolors.FAIL}Certificate found ["+str(lineCounter)+f"]: {bcolors.ENDC}{bcolors.RED}"+filePath+f"{bcolors.ENDC}")
+                    pass
                 # Private keys
                 if "-----BEGIN PRIVATE KEY-----" in line or "-----BEGIN RSA PRIVATE KEY-----" in line:
                     findings.append(f"   ⚠️ {bcolors.FAIL}Private key found ["+str(lineCounter)+f"]: {bcolors.ENDC}{bcolors.RED}"+filePath+f"{bcolors.ENDC}")
+                # Passwords
+                passwordPatterns = \
+                    re.compile(r"passwd = [A-Za-z0-9_]+").findall(line) + \
+                    re.compile(r"passwd = \'[A-Za-z0-9_]+\'").findall(line) + \
+                    re.compile(r"passwd = \"[A-Za-z0-9_]+\"").findall(line) + \
+                    re.compile(r"passwd=[A-Za-z0-9_]+").findall(line) + \
+                    re.compile(r"passwd=\'[A-Za-z0-9_]+\'").findall(line) + \
+                    re.compile(r"passwd=\"[A-Za-z0-9_]+\"").findall(line) + \
+                    re.compile(r"password = [A-Za-z0-9_]+").findall(line) + \
+                    re.compile(r"password = \'[A-Za-z0-9_]+\'").findall(line) + \
+                    re.compile(r"password = \"[A-Za-z0-9_]+\"").findall(line) + \
+                    re.compile(r"password=[A-Za-z0-9_]+").findall(line) + \
+                    re.compile(r"password=\'[A-Za-z0-9_]+\'").findall(line) + \
+                    re.compile(r"password=\"[A-Za-z0-9_]+\"").findall(line) + \
+                    re.compile(r"Password = [A-Za-z0-9_]+").findall(line) + \
+                    re.compile(r"Password = \'[A-Za-z0-9_]+\'").findall(line) + \
+                    re.compile(r"Password = \"[A-Za-z0-9_]+\"").findall(line) + \
+                    re.compile(r"Password=[A-Za-z0-9_]+").findall(line) + \
+                    re.compile(r"Password=\'[A-Za-z0-9_]+\'").findall(line) + \
+                    re.compile(r"Password=\"[A-Za-z0-9_]+\"").findall(line)
+                for m in passwordPatterns:
+                    findings.append(f"   ⚠️ {bcolors.FAIL}Password found ["+str(lineCounter)+f"]: {bcolors.ENDC}{bcolors.RED}"+filePath+f"{bcolors.ENDC} ({bcolors.WARNING}"+m+f"{bcolors.ENDC})")
                 # GitHub Personal Access Tokens (PATs)
                 PATPattern = re.compile(r"\bgithub_pat_[A-Za-z0-9_]+\b")
                 for m in PATPattern.findall(line):
@@ -86,6 +111,7 @@ sensitiveExtensions = [
     ".conf",
     ".config",
     ".consul",
+    ".cpp",
     ".credentials",
     ".crt",
     ".csr",
@@ -105,6 +131,7 @@ sensitiveExtensions = [
     ".gpg",
     ".gsutil",
     ".heroku",
+    ".h",
     ".hg",
     ".history",
     ".htaccess",
@@ -116,6 +143,7 @@ sensitiveExtensions = [
     ".ini",
     ".inventory",
     ".jenkins",
+    ".json",
     ".key",
     ".keychain",
     ".keys",
@@ -142,6 +170,7 @@ sensitiveExtensions = [
     ".pfx",
     ".pgp",
     ".pgpass",
+    ".php",
     ".pip.conf",
     ".plist",
     ".poetry",
@@ -172,6 +201,7 @@ sensitiveExtensions = [
     ".tfvars",
     ".tmp",
     ".travis",
+    ".txt",
     ".vault",
     ".wal",
     ".xcuserstate",
