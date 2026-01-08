@@ -34,7 +34,7 @@ def outputFile(root, file, extension):
         contents = f.read()
         if "-----BEGIN CERTIFICATE-----" in contents:
             findings.append(f"   ⚠️ {bcolors.FAIL}Certificate found: {bcolors.ENDC}{bcolors.RED}"+filePath+f"{bcolors.ENDC}")
-        if "-----BEGIN PRIVATE KEY-----" in contents:
+        if "-----BEGIN PRIVATE KEY-----" in contents or "-----BEGIN RSA PRIVATE KEY-----" in contents:
             findings.append(f"   ⚠️ {bcolors.FAIL}Private key found: {bcolors.ENDC}{bcolors.RED}"+filePath+f"{bcolors.ENDC}")
     return filePath
 
@@ -191,6 +191,7 @@ sensitiveFiles = [
     "wallet",
 ]
 exceptions = [
+    "desktop.ini",
     "Thumbs.db",
 ]
 directories = [
