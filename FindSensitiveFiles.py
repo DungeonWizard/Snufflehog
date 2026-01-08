@@ -52,6 +52,12 @@ def outputFile(root, file, extension):
                     re.compile(r"pass=[A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
                     re.compile(r"pass=\'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
                     re.compile(r"pass=\"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
+                    re.compile(r"Pass = [A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
+                    re.compile(r"Pass = \'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
+                    re.compile(r"Pass = \"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
+                    re.compile(r"Pass=[A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
+                    re.compile(r"Pass=\'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
+                    re.compile(r"Pass=\"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
                     re.compile(r"PASS = [A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
                     re.compile(r"PASS = \'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
                     re.compile(r"PASS = \"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
@@ -64,6 +70,12 @@ def outputFile(root, file, extension):
                     re.compile(r"passwd=[A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
                     re.compile(r"passwd=\'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
                     re.compile(r"passwd=\"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
+                    re.compile(r"Passwd = [A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
+                    re.compile(r"Passwd = \'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
+                    re.compile(r"Passwd = \"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
+                    re.compile(r"Passwd=[A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
+                    re.compile(r"Passwd=\'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
+                    re.compile(r"Passwd=\"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
                     re.compile(r"PASSWD = [A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
                     re.compile(r"PASSWD = \'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
                     re.compile(r"PASSWD = \"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
