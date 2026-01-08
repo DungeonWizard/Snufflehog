@@ -45,61 +45,131 @@ def outputFile(root, file, extension):
                 if "-----BEGIN PRIVATE KEY-----" in line or "-----BEGIN RSA PRIVATE KEY-----" in line:
                     findings.append(f"   ⚠️ {bcolors.FAIL}Private key found ["+str(lineCounter)+f"]: {bcolors.ENDC}{bcolors.RED}"+filePath+f"{bcolors.ENDC}")
                 # Passwords
+                passwordRegex = "[A-Za-z0-9_!@#$%^&*\-+=.?]+"
                 passwordPatterns = \
-                    re.compile(r"pass = [A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"pass = \'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"pass = \"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"pass=[A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"pass=\'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"pass=\"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"Pass = [A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"Pass = \'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"Pass = \"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"Pass=[A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"Pass=\'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"Pass=\"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"PASS = [A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"PASS = \'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"PASS = \"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"PASS=[A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"PASS=\'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"PASS=\"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"passwd = [A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"passwd = \'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"passwd = \"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"passwd=[A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"passwd=\'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"passwd=\"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"Passwd = [A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"Passwd = \'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"Passwd = \"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"Passwd=[A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"Passwd=\'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"Passwd=\"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"PASSWD = [A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"PASSWD = \'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"PASSWD = \"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"PASSWD=[A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"PASSWD=\'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"PASSWD=\"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"password = [A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"password = \'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"password = \"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"password=[A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"password=\'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"password=\"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"Password = [A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"Password = \'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"Password = \"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"Password=[A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"Password=\'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"Password=\"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"PASSWORD = [A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"PASSWORD = \'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"PASSWORD = \"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line) + \
-                    re.compile(r"PASSWORD=[A-Za-z0-9_!@#$%^&*\-+=.?]+").findall(line) + \
-                    re.compile(r"PASSWORD=\'[A-Za-z0-9_!@#$%^&*\-+=.?]+\'").findall(line) + \
-                    re.compile(r"PASSWORD=\"[A-Za-z0-9_!@#$%^&*\-+=.?]+\"").findall(line)
+                    re.compile(r"--amazonpassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--amazonpassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--amazonpassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--awspassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--awspassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--awspassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--azurepassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--azurepassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--azurepassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--bannerldappassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--bannerldappassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--bannerldappassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--bannerpassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--bannerpassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--bannerpassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--databasepassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--databasepassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--databasepassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--dbpass "+passwordRegex).findall(line) + \
+                    re.compile(r"--dbpass \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--dbpass \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--dbpasswd "+passwordRegex).findall(line) + \
+                    re.compile(r"--dbpasswd \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--dbpasswd \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--dbpassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--dbpassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--dbpassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--defaultpassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--defaultpassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--defaultpassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--githubpassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--githubpassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--githubpassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--gitlabpassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--gitlabpassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--gitlabpassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--gitpassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--gitpassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--gitpassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--ldappassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--ldappassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--ldappassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--mariadbpassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--mariadbpassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--mariadbpassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--moodlepassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--moodlepassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--moodlepassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--oraclepassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--oraclepassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--oraclepassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--pass "+passwordRegex).findall(line) + \
+                    re.compile(r"--pass \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--pass \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--passwd "+passwordRegex).findall(line) + \
+                    re.compile(r"--passwd \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--passwd \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--password "+passwordRegex).findall(line) + \
+                    re.compile(r"--password \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--password \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--samlpassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--samlpassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--samlpassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--secretpassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--secretpassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--secretpassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"--testpassword "+passwordRegex).findall(line) + \
+                    re.compile(r"--testpassword \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"--testpassword \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"pass = "+passwordRegex).findall(line) + \
+                    re.compile(r"pass = \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"pass = \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"pass="+passwordRegex).findall(line) + \
+                    re.compile(r"pass=\'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"pass=\""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"Pass = "+passwordRegex).findall(line) + \
+                    re.compile(r"Pass = \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"Pass = \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"Pass="+passwordRegex).findall(line) + \
+                    re.compile(r"Pass=\'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"Pass=\""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"PASS = "+passwordRegex).findall(line) + \
+                    re.compile(r"PASS = \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"PASS = \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"PASS="+passwordRegex).findall(line) + \
+                    re.compile(r"PASS=\'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"PASS=\""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"passwd = "+passwordRegex).findall(line) + \
+                    re.compile(r"passwd = \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"passwd = \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"passwd="+passwordRegex).findall(line) + \
+                    re.compile(r"passwd=\'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"passwd=\""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"Passwd = "+passwordRegex).findall(line) + \
+                    re.compile(r"Passwd = \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"Passwd = \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"Passwd="+passwordRegex).findall(line) + \
+                    re.compile(r"Passwd=\'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"Passwd=\""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"PASSWD = "+passwordRegex).findall(line) + \
+                    re.compile(r"PASSWD = \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"PASSWD = \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"PASSWD="+passwordRegex).findall(line) + \
+                    re.compile(r"PASSWD=\'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"PASSWD=\""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"password = "+passwordRegex).findall(line) + \
+                    re.compile(r"password = \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"password = \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"password="+passwordRegex).findall(line) + \
+                    re.compile(r"password=\'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"password=\""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"Password = "+passwordRegex).findall(line) + \
+                    re.compile(r"Password = \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"Password = \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"Password="+passwordRegex).findall(line) + \
+                    re.compile(r"Password=\'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"Password=\""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"PASSWORD = "+passwordRegex).findall(line) + \
+                    re.compile(r"PASSWORD = \'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"PASSWORD = \""+passwordRegex+"\"").findall(line) + \
+                    re.compile(r"PASSWORD="+passwordRegex).findall(line) + \
+                    re.compile(r"PASSWORD=\'"+passwordRegex+"\'").findall(line) + \
+                    re.compile(r"PASSWORD=\""+passwordRegex+"\"").findall(line)
                 for m in passwordPatterns:
                     findings.append(f"   ⚠️ {bcolors.FAIL}Password found ["+str(lineCounter)+f"]: {bcolors.ENDC}{bcolors.RED}"+filePath+f"{bcolors.ENDC} ({bcolors.WARNING}"+m+f"{bcolors.ENDC})")
                 # GitHub Personal Access Tokens (PATs)
