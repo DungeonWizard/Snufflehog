@@ -22,11 +22,20 @@ class bcolors:
     WHITE = '\033[37m'
     ORANGE = '\033[38;5;208m'
 
+findings = []
+
 def outputFile(root, file, extension):
     filePath = os.path.join(root, file)
-    filePath = filePath.replace(file, f"{bcolors.FAIL}"+file+f"{bcolors.ENDC}").replace(extension, f"{bcolors.RED}"+extension+f"{bcolors.ENDC}")
-    filePath = filePath.replace(directory, "").replace("\\","/")
-    print(f" 📄 {bcolors.RED}" + filePath + f"{bcolors.ENDC}")
+    filePathFinal = filePath.replace(file, f"{bcolors.FAIL}"+file+f"{bcolors.ENDC}").replace(extension, f"{bcolors.RED}"+extension+f"{bcolors.ENDC}")
+    filePathFinal = filePathFinal.replace(directory, "").replace("\\","/")
+    print(f" 📄 {bcolors.RED}" + filePathFinal + f"{bcolors.ENDC}")
+    # Check file contents for more specific findings.
+    with open(filePath, "r", encoding="utf-8", errors="ignore") as f:
+        contents = f.read()
+        if "-----BEGIN CERTIFICATE-----" in contents:
+            findings.append(f"   ⚠️ {bcolors.FAIL}Certificate found: {bcolors.ENDC}{bcolors.RED}"+filePath+f"{bcolors.ENDC}")
+        if "-----BEGIN PRIVATE KEY-----" in contents:
+            findings.append(f"   ⚠️ {bcolors.FAIL}Private key found: {bcolors.ENDC}{bcolors.RED}"+filePath+f"{bcolors.ENDC}")
     return filePath
 
 def scan(folder_path):
@@ -194,3 +203,6 @@ for directory in directories:
         print(f"  ✅ {bcolors.OKGREEN}Nothing found.{bcolors.ENDC} ({bcolors.WARNING}{numberScanned:,} files checked{bcolors.ENDC})")
     else:
         print(f"  ☣️ {bcolors.OKGREEN}Some files found.{bcolors.ENDC} ({bcolors.WARNING}{numberScanned:,} files checked{bcolors.ENDC})")
+    if findings:
+        for finding in findings:
+            print(finding)
