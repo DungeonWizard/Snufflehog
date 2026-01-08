@@ -46,12 +46,30 @@ def outputFile(root, file, extension):
                     findings.append(f"   ⚠️ {bcolors.FAIL}Private key found ["+str(lineCounter)+f"]: {bcolors.ENDC}{bcolors.RED}"+filePath+f"{bcolors.ENDC}")
                 # Passwords
                 passwordPatterns = \
+                    re.compile(r"pass = [A-Za-z0-9_]+").findall(line) + \
+                    re.compile(r"pass = \'[A-Za-z0-9_]+\'").findall(line) + \
+                    re.compile(r"pass = \"[A-Za-z0-9_]+\"").findall(line) + \
+                    re.compile(r"pass=[A-Za-z0-9_]+").findall(line) + \
+                    re.compile(r"pass=\'[A-Za-z0-9_]+\'").findall(line) + \
+                    re.compile(r"pass=\"[A-Za-z0-9_]+\"").findall(line) + \
+                    re.compile(r"PASS = [A-Za-z0-9_]+").findall(line) + \
+                    re.compile(r"PASS = \'[A-Za-z0-9_]+\'").findall(line) + \
+                    re.compile(r"PASS = \"[A-Za-z0-9_]+\"").findall(line) + \
+                    re.compile(r"PASS=[A-Za-z0-9_]+").findall(line) + \
+                    re.compile(r"PASS=\'[A-Za-z0-9_]+\'").findall(line) + \
+                    re.compile(r"PASS=\"[A-Za-z0-9_]+\"").findall(line) + \
                     re.compile(r"passwd = [A-Za-z0-9_]+").findall(line) + \
                     re.compile(r"passwd = \'[A-Za-z0-9_]+\'").findall(line) + \
                     re.compile(r"passwd = \"[A-Za-z0-9_]+\"").findall(line) + \
                     re.compile(r"passwd=[A-Za-z0-9_]+").findall(line) + \
                     re.compile(r"passwd=\'[A-Za-z0-9_]+\'").findall(line) + \
                     re.compile(r"passwd=\"[A-Za-z0-9_]+\"").findall(line) + \
+                    re.compile(r"PASSWD = [A-Za-z0-9_]+").findall(line) + \
+                    re.compile(r"PASSWD = \'[A-Za-z0-9_]+\'").findall(line) + \
+                    re.compile(r"PASSWD = \"[A-Za-z0-9_]+\"").findall(line) + \
+                    re.compile(r"PASSWD=[A-Za-z0-9_]+").findall(line) + \
+                    re.compile(r"PASSWD=\'[A-Za-z0-9_]+\'").findall(line) + \
+                    re.compile(r"PASSWD=\"[A-Za-z0-9_]+\"").findall(line) + \
                     re.compile(r"password = [A-Za-z0-9_]+").findall(line) + \
                     re.compile(r"password = \'[A-Za-z0-9_]+\'").findall(line) + \
                     re.compile(r"password = \"[A-Za-z0-9_]+\"").findall(line) + \
@@ -63,7 +81,13 @@ def outputFile(root, file, extension):
                     re.compile(r"Password = \"[A-Za-z0-9_]+\"").findall(line) + \
                     re.compile(r"Password=[A-Za-z0-9_]+").findall(line) + \
                     re.compile(r"Password=\'[A-Za-z0-9_]+\'").findall(line) + \
-                    re.compile(r"Password=\"[A-Za-z0-9_]+\"").findall(line)
+                    re.compile(r"Password=\"[A-Za-z0-9_]+\"").findall(line) + \
+                    re.compile(r"PASSWORD = [A-Za-z0-9_]+").findall(line) + \
+                    re.compile(r"PASSWORD = \'[A-Za-z0-9_]+\'").findall(line) + \
+                    re.compile(r"PASSWORD = \"[A-Za-z0-9_]+\"").findall(line) + \
+                    re.compile(r"PASSWORD=[A-Za-z0-9_]+").findall(line) + \
+                    re.compile(r"PASSWORD=\'[A-Za-z0-9_]+\'").findall(line) + \
+                    re.compile(r"PASSWORD=\"[A-Za-z0-9_]+\"").findall(line)
                 for m in passwordPatterns:
                     findings.append(f"   ⚠️ {bcolors.FAIL}Password found ["+str(lineCounter)+f"]: {bcolors.ENDC}{bcolors.RED}"+filePath+f"{bcolors.ENDC} ({bcolors.WARNING}"+m+f"{bcolors.ENDC})")
                 # GitHub Personal Access Tokens (PATs)
