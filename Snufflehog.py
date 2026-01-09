@@ -240,6 +240,7 @@ def scan(folder_path):
                 for extension in sensitiveExtensions:
                     if file.lower().endswith(extension) and file not in exceptions:
                         foundFiles.append(outputFile(root, file, extension))
+                bar.text(f"{file}")
                 bar()
 
     return (foundFiles, numberScanned)
@@ -394,7 +395,9 @@ exceptions = [
     "Thumbs.db",
 ]
 directories = [
-    "C:/Users/Public",
+    "C:/Users/Public/Desktop",
+    "C:/Users/Public/Documents",
+    "C:/Users/Public/Downloads",
 ]
 for directory in directories:
     print(f"📁 {bcolors.WARNING}"+directory+f"{bcolors.ENDC}")    
